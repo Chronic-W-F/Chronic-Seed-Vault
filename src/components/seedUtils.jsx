@@ -64,14 +64,15 @@ export async function fetchSeedData() {
           if (typeSex.toLowerCase().includes("auto")) type = "Autoflower";
 
           return {
-            slot,
-            breeder,
-            strain,
-            sex,
-            type,
-            case: name,
-            alias: normalizeAlias(breeder),
-          };
+  slot,
+  breeder,
+  strain,
+  sex,
+  type,
+  case: name,
+  alias: normalizeAlias(breeder),
+  raw: line.trim(), // <--- THIS enables the app to show the original line
+};
         });
       } catch (err) {
         console.error(`Error loading ${name}:`, err);
