@@ -15,10 +15,7 @@ const aliasMap = {
   'chronic worm farmer': 'chronic worm farmer',
 };
 
-const normalize = (val) => {
-  const key = val?.toLowerCase().trim();
-  return aliasMap[key] || key || '';
-};
+const normalize = (val) => val?.toLowerCase().trim() || '';
 
 const App = () => {
   const [seedData, setSeedData] = useState([]);
@@ -29,7 +26,6 @@ const App = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      console.log(">>> Loading seed data...");
       const data = await fetchSeedData();
       setSeedData(data);
 
@@ -53,7 +49,8 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const q = normalize(query);
+    const rawQuery = normalize(query);
+    const aliasTarget = aliasMap[rawQuery] || null;
 
     const newFiltered = seedData.filter((entry) => {
       const breeder = normalize(entry.breeder);
@@ -62,18 +59,22 @@ const App = () => {
       const raw = normalize(entry.raw);
       const caseName = entry.case;
 
-      if (q) {
-        return (
-          breeder.includes(q) ||
-          strain.includes(q) ||
-          slot.includes(q) ||
-          raw.includes(q)
-        );
+      if (rawQuery) {
+        if (aliasTarget) {
+          // Exact alias match: only match breeder
+          return breeder === aliasTarget;
+        } else {
+          // Fuzzy fallback search
+          return (
+            breeder.includes(rawQuery) ||
+            strain.includes(rawQuery) ||
+            slot.includes(rawQuery) ||
+            raw.includes(rawQuery)
+          );
+        }
       }
 
-      if (selectedCase) {
-        return caseName === selectedCase;
-      }
+      if (selectedCase) return caseName === selectedCase;
 
       return false;
     });
