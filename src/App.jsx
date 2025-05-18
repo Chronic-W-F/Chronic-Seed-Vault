@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchSeedData } from './components/seedUtils';
-import { VaultSummary } from './VaultSummary';
-
+import { VaultSummary } from './components/VaultSummary';
 const aliasMap = {
   copy: 'copycat genetics',
   copycat: 'copycat genetics',
