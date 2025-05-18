@@ -1,7 +1,7 @@
 useEffect(() => {
   async function fetchData() {
     try {
-      const res = await fetch("/api/seedlist");
+      const res = await fetch(`/api/seedlist?nocache=${Date.now()}`);
       const text = await res.text();
       const lines = text.split("\n").filter(line => line.trim().length > 0);
       setEntries(lines);
