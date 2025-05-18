@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { fetchSeedData, DNAIcon, BudIcon } from '../components/seedData.jsx';
-import SearchSection from '../components/SearchSection.jsx';
+import { fetchSeedData, DNAIcon, BudIcon } from './components/seedData';
+import SearchSection from './components/SearchSection';
 
 const getVaultSummary = (data) => {
   const breeders = new Set();
   const strainSet = new Set();
 
   data.forEach(({ breeder, strain }) => {
-    if (breeder) breeders.add(breeder);
+    if (breeder) breeders.add(breeder.toLowerCase());
     if (strain) strainSet.add(strain.toLowerCase());
   });
 
@@ -63,6 +63,12 @@ function App() {
         breeders={summary.totalBreeders}
         strains={summary.totalStrains}
       />
+
+      {summary.totalBreeders === 0 && (
+        <div className="text-red-600 text-sm mb-4">
+          No seed data loaded. Check Google Doc links or formatting.
+        </div>
+      )}
 
       <SearchSection seedData={seedData} />
     </div>
