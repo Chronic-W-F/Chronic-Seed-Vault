@@ -39,18 +39,24 @@ export const fetchSeedData = async () => {
         .filter((line) => line && !line.toLowerCase().includes('slot'));
 
       for (const line of lines) {
-        const [slot, breeder, strain, sex, type] = line.split(/\s*–\s*/);
-        if (slot && breeder && strain) {
-          allData.push({
-            slot: slot.trim(),
-            breeder: breeder.trim(),
-            strain: strain.trim(),
-            sex: sex?.trim() || '',
-            type: type?.trim() || '',
-            case: name,
-            raw: line.trim(),
-          });
+        const parts = line.split(/\s*[–—-]\s*/); // handle all dash types
+
+        if (parts.length < 3) {
+          console.warn(`[${name}] Skipped malformed line: ${line}`);
+          continue;
         }
+
+        const [slot, breeder, strain, sex, type] = parts;
+
+        allData.push({
+          slot: slot?.trim() || '',
+          breeder: breeder?.trim() || '',
+          strain: strain?.trim() || '',
+          sex: sex?.trim() || '',
+          type: type?.trim() || '',
+          case: name,
+          raw: line.trim(),
+        });
       }
     } catch (err) {
       console.error(`Failed to load ${name}:`, err);
