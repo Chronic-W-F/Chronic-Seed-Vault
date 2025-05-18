@@ -40,13 +40,7 @@ const App = () => {
       setFiltered(seedData);
     } else {
       setFiltered(
-        seedData.filter(({ breeder, strain, alias }) => {
-          return (
-            normalize(breeder).includes(q) ||
-            normalize(strain).includes(q) ||
-            normalize(alias).includes(q)
-          );
-        })
+        seedData.filter(({ raw }) => normalize(raw).includes(q))
       );
     }
   }, [query, seedData]);
@@ -58,7 +52,7 @@ const App = () => {
 
       <input
         type="text"
-        placeholder="Search breeders or strains..."
+        placeholder="Search any keyword..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="border p-2 rounded w-full my-4"
@@ -68,23 +62,13 @@ const App = () => {
         <table className="table-auto w-full text-sm border">
           <thead>
             <tr className="bg-green-200 text-left">
-              <th className="px-2 py-1 border">Case</th>
-              <th className="px-2 py-1 border">Slot</th>
-              <th className="px-2 py-1 border">Breeder</th>
-              <th className="px-2 py-1 border">Strain</th>
-              <th className="px-2 py-1 border">Sex</th>
-              <th className="px-2 py-1 border">Type</th>
+              <th className="px-2 py-1 border">Line</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((entry, index) => (
               <tr key={index} className="border-t">
-                <td className="px-2 py-1 border">{entry.case}</td>
-                <td className="px-2 py-1 border">{entry.slot || ''}</td>
-                <td className="px-2 py-1 border">{entry.breeder || ''}</td>
-                <td className="px-2 py-1 border">{entry.strain || ''}</td>
-                <td className="px-2 py-1 border">{entry.sex || ''}</td>
-                <td className="px-2 py-1 border">{entry.type || ''}</td>
+                <td className="px-2 py-1 border whitespace-pre">{entry.raw}</td>
               </tr>
             ))}
           </tbody>
