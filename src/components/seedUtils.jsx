@@ -40,15 +40,17 @@ export const fetchSeedData = async () => {
 
       for (const line of lines) {
         const [slot, breeder, strain, sex, type] = line.split(/\s*–\s*/);
-        allData.push({
-          slot: slot?.trim(),
-          breeder: breeder?.trim(),
-          strain: strain?.trim(),
-          sex: sex?.trim(),
-          type: type?.trim(),
-          case: name,
-          raw: line.trim(),
-        });
+        if (slot && breeder && strain) {
+          allData.push({
+            slot: slot.trim(),
+            breeder: breeder.trim(),
+            strain: strain.trim(),
+            sex: sex?.trim() || '',
+            type: type?.trim() || '',
+            case: name,
+            raw: line.trim(),
+          });
+        }
       }
     } catch (err) {
       console.error(`Failed to load ${name}:`, err);
