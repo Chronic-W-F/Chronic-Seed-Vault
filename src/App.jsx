@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchSeedData } from './components/seedUtils';
 import { VaultSummary } from './components/VaultSummary';
 
-const normalize = (val) => val?.toLowerCase().trim() || '';
+const normalize = (val) => val?.toLowerCase().replace(/\s+/g, '') || '';
 
 const App = () => {
   const [seedData, setSeedData] = useState([]);
@@ -37,51 +37,52 @@ const App = () => {
 
   useEffect(() => {
     const q = normalize(query);
-    const filteredByCase =
-      selectedCase === 'All'
-        ? seedData
-        : seedData.filter((entry) => entry.case === selectedCase);
+    let result = seedData;
 
-    const finalFiltered = !q
-      ? filteredByCase
-      : filteredByCase.filter(({ raw, alias, case: docCase }) => {
-          return (
-            normalize(raw).includes(q) ||
-            normalize(alias).includes(q) ||
-            normalize(docCase).includes(q)
-          );
-        });
+    if (selectedCase !== 'All') {
+      result = result.filter((entry) => entry.case === selectedCase);
+    }
 
-    setFiltered(finalFiltered);
-  }, [query, seedData, selectedCase]);
+    if (q) {
+      result = result.filter(
+        ({ raw, breeder, alias, strain }) =>
+          normalize(raw).includes(q) ||
+          normalize(breeder).includes(q) ||
+          normalize(alias).includes(q) ||
+          normalize(strain).includes(q)
+      );
+    }
 
-  const caseOptions = ['All', ...Array.from(new Set(seedData.map((entry) => entry.case)))];
+    setFiltered(result);
+  }, [query, selectedCase, seedData]);
+
+  const uniqueCases = [...new Set(seedData.map((entry) => entry.case))].sort();
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Chronic Seed Vault</h1>
       <VaultSummary breeders={summary.totalBreeders} strains={summary.totalStrains} />
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search any keyword, breeder, or alias..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0"
-        />
-        <select
-          value={selectedCase}
-          onChange={(e) => setSelectedCase(e.target.value)}
-          className="border p-2 rounded w-full sm:w-1/3"
-        >
-          {caseOptions.map((caseName, idx) => (
-            <option key={idx} value={caseName}>
-              {caseName}
-            </option>
-          ))}
-        </select>
-      </div>
+      <input
+        type="text"
+        placeholder="Search any keyword..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="border p-2 rounded w-full my-4"
+      />
+
+      <select
+        value={selectedCase}
+        onChange={(e) => setSelectedCase(e.target.value)}
+        className="border p-2 rounded mb-4 w-full"
+      >
+        <option value="All">All</option>
+        {uniqueCases.map((caseName) => (
+          <option key={caseName} value={caseName}>
+            {caseName}
+          </option>
+        ))}
+      </select>
 
       <div className="overflow-x-auto">
         <table className="table-auto w-full text-sm border">
