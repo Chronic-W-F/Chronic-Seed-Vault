@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchSeedData } from './seedUtils';
+import { fetchSeedData } from './components/seedUtils';
 import { VaultSummary } from './VaultSummary';
 
 const aliasMap = {
