@@ -1,3 +1,5 @@
+// src/components/seedUtils.js
+
 export const DNAIcon = () => (
   <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🧬</span>
 );
@@ -6,7 +8,14 @@ export const BudIcon = () => (
   <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🌿</span>
 );
 
-// Load seed data from multiple Google Docs
+const aliasMap = {
+  thc: "Total Health Connections",
+  copy: "CopyCat Genetics",
+  copycat: "CopyCat Genetics",
+  dwp: "DadWeedProject",
+  cwf: "Chronic Worm Farmer",
+};
+
 const docUrls = [
   {
     name: "Total Health Connections",
@@ -47,17 +56,27 @@ export async function fetchSeedData() {
       return lines.map((line) => {
         const parts = line.split(" – ");
         const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
+        const breeder = parts[1]?.trim();
+        const strain = parts[2]?.trim();
+        const sex = parts[3]?.trim();
+        const type = parts[4]?.trim();
         return {
           slot,
-          breeder: parts[1]?.trim() || '–',
-          strain: parts[2]?.trim() || '–',
-          sex: parts[3]?.trim() || '–',
-          type: parts[4]?.trim() || '–',
+          breeder,
+          strain,
+          sex,
+          type,
           case: name,
+          alias: normalizeAlias(breeder),
         };
       });
     })
   );
 
   return results.flat();
+}
+
+function normalizeAlias(breeder = "") {
+  const key = breeder.toLowerCase().replace(/\s+/g, "");
+  return aliasMap[key] || breeder;
 }
