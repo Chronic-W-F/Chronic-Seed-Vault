@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { fetchSeedData, DNAIcon, BudIcon } from '../components/seedData.jsx';
 import SearchSection from '../components/SearchSection.jsx';
@@ -19,62 +19,54 @@ const getVaultSummary = (data) => {
 };
 
 const VaultSummary = ({ breeders, strains }) => (
-  <div className="vault-summary p-4 bg-green-100 rounded-xl shadow-md">
+  <div className="vault-summary p-4 bg-green-100 rounded-xl shadow-md mb-6">
     <h2 className="text-lg sm:text-xl font-bold text-green-900 mb-2">
       Chronic Seed Vault Summary
     </h2>
     <div className="flex flex-col sm:flex-row sm:space-x-4">
-      <div className="flex items-center">
+      <div className="flex items-center mb-2 sm:mb-0">
         <DNAIcon />
         <span className="font-medium">{breeders} Unique Breeders</span>
       </div>
-      <div className="flex items-center mt-2 sm:mt-0">
+      <div className="flex items-center">
         <BudIcon />
         <span className="font-medium">{strains} Unique Strains</span>
       </div>
     </div>
-    <p className="text-xs text-gray-600 mt-2">
-      Synced with your latest uploads
-    </p>
   </div>
 );
 
-export default function App() {
-  const [selectedCase, setSelectedCase] = useState('all');
+function App() {
   const [seedData, setSeedData] = useState([]);
   const [summary, setSummary] = useState({ totalBreeders: 0, totalStrains: 0 });
 
   useEffect(() => {
-    fetchSeedData().then((data) => {
+    const loadData = async () => {
+      const data = await fetchSeedData();
       setSeedData(data);
       setSummary(getVaultSummary(data));
-    });
+    };
+
+    loadData();
   }, []);
 
   return (
-    <div className="p-4">
-      <VaultSummary breeders={summary.totalBreeders} strains={summary.totalStrains} />
+    <div className="App container mx-auto px-4 py-6">
+      <header className="mb-6 text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold text-green-800">
+          Chronic Seed Vault
+        </h1>
+        <p className="text-sm text-gray-600">Search across all your seed cases</p>
+      </header>
 
-      <div className="mb-4 mt-4">
-        <label htmlFor="caseSelect" className="block text-sm font-medium mb-1">
-          Filter by Case:
-        </label>
-        <select
-          id="caseSelect"
-          className="p-2 border rounded w-full"
-          value={selectedCase}
-          onChange={(e) => setSelectedCase(e.target.value)}
-        >
-          <option value="all">All Cases</option>
-          <option value="Autoflower">Autoflower</option>
-          <option value="THC">THC</option>
-          <option value="Black Case">Black Case</option>
-          <option value="Red/Black Case">Red/Black Case</option>
-          <option value="CWF">Chronic Worm Farmer</option>
-        </select>
-      </div>
+      <VaultSummary
+        breeders={summary.totalBreeders}
+        strains={summary.totalStrains}
+      />
 
-      <SearchSection selectedCase={selectedCase} seedData={seedData} />
+      <SearchSection seedData={seedData} />
     </div>
   );
 }
+
+export default App;
