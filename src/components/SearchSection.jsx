@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchSeedData } from './seedData';
+import { fetchSeedData } from './seedUtils.jsx';
 
 const normalizeAlias = (text) => {
   const lower = text.toLowerCase();
