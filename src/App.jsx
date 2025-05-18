@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils.jsx';
-import SearchSection from './components/SearchSection';
+import SearchSection from './components/SearchSection.jsx';
 
 const getVaultSummary = (data) => {
   const breeders = new Set();
