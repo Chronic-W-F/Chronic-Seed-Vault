@@ -9,6 +9,7 @@ const App = () => {
   const [summary, setSummary] = useState({ totalBreeders: 0, totalStrains: 0 });
   const [query, setQuery] = useState('');
   const [filtered, setFiltered] = useState([]);
+  const [selectedCase, setSelectedCase] = useState('All');
 
   useEffect(() => {
     const loadData = async () => {
@@ -36,27 +37,47 @@ const App = () => {
 
   useEffect(() => {
     const q = normalize(query);
-    if (!q) {
-      setFiltered(seedData);
-    } else {
-      setFiltered(
-        seedData.filter(({ raw }) => normalize(raw).includes(q))
-      );
-    }
-  }, [query, seedData]);
+    const filteredByCase =
+      selectedCase === 'All'
+        ? seedData
+        : seedData.filter((entry) => entry.case === selectedCase);
+
+    const finalFiltered = !q
+      ? filteredByCase
+      : filteredByCase.filter(({ raw, alias }) => {
+          return normalize(raw).includes(q) || normalize(alias).includes(q);
+        });
+
+    setFiltered(finalFiltered);
+  }, [query, seedData, selectedCase]);
+
+  const caseOptions = ['All', ...Array.from(new Set(seedData.map((entry) => entry.case)))];
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Chronic Seed Vault</h1>
       <VaultSummary breeders={summary.totalBreeders} strains={summary.totalStrains} />
 
-      <input
-        type="text"
-        placeholder="Search any keyword..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="border p-2 rounded w-full my-4"
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4">
+        <input
+          type="text"
+          placeholder="Search any keyword..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0"
+        />
+        <select
+          value={selectedCase}
+          onChange={(e) => setSelectedCase(e.target.value)}
+          className="border p-2 rounded w-full sm:w-1/3"
+        >
+          {caseOptions.map((caseName, idx) => (
+            <option key={idx} value={caseName}>
+              {caseName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="table-auto w-full text-sm border">
@@ -68,7 +89,9 @@ const App = () => {
           <tbody>
             {filtered.map((entry, index) => (
               <tr key={index} className="border-t">
-                <td className="px-2 py-1 border whitespace-pre">{entry.raw}</td>
+                <td className="px-2 py-1 border whitespace-pre">
+                  <strong>{entry.case}:</strong> {entry.raw}
+                </td>
               </tr>
             ))}
           </tbody>
