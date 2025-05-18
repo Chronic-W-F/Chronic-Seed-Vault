@@ -1,4 +1,4 @@
-// src/components/seedUtils.js
+// src/components/seedUtils.jsx
 
 export const DNAIcon = () => (
   <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🧬</span>
@@ -9,11 +9,11 @@ export const BudIcon = () => (
 );
 
 const aliasMap = {
-  thc: "Total Health Connections",
-  copy: "CopyCat Genetics",
-  copycat: "CopyCat Genetics",
-  dwp: "DadWeedProject",
-  cwf: "Chronic Worm Farmer",
+  thc: 'Total Health Connections',
+  copy: 'CopyCat Genetics',
+  copycat: 'CopyCat Genetics',
+  dwp: 'DadWeedProject',
+  cwf: 'Chronic Worm Farmer',
 };
 
 const docUrls = [
@@ -43,40 +43,45 @@ const docUrls = [
   },
 ];
 
+function normalizeAlias(breeder = "") {
+  const key = breeder.toLowerCase().replace(/\s+/g, "");
+  return aliasMap[key] || breeder;
+}
+
 export async function fetchSeedData() {
   const results = await Promise.all(
     docUrls.map(async ({ name, url }) => {
-      const res = await fetch(url);
-      const text = await res.text();
+      try {
+        const res = await fetch(url);
+        const text = await res.text();
+        const lines = text
+          .split("\n")
+          .filter((line) => line.trim() && !line.toLowerCase().includes("void"));
 
-      const lines = text
-        .split("\n")
-        .filter((line) => line.trim() && !line.toLowerCase().includes("void"));
+        return lines.map((line) => {
+          const parts = line.split(" – ");
+          const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
+          const breeder = parts[1]?.trim();
+          const strain = parts[2]?.trim();
+          const sex = parts[3]?.trim();
+          const type = parts[4]?.trim();
 
-      return lines.map((line) => {
-        const parts = line.split(" – ");
-        const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
-        const breeder = parts[1]?.trim();
-        const strain = parts[2]?.trim();
-        const sex = parts[3]?.trim();
-        const type = parts[4]?.trim();
-        return {
-          slot,
-          breeder,
-          strain,
-          sex,
-          type,
-          case: name,
-          alias: normalizeAlias(breeder),
-        };
-      });
+          return {
+            slot,
+            breeder,
+            strain,
+            sex,
+            type,
+            case: name,
+            alias: normalizeAlias(breeder),
+          };
+        });
+      } catch (err) {
+        console.error(`Error loading ${name}:`, err);
+        return [];
+      }
     })
   );
 
   return results.flat();
-}
-
-function normalizeAlias(breeder = "") {
-  const key = breeder.toLowerCase().replace(/\s+/g, "");
-  return aliasMap[key] || breeder;
 }
