@@ -1,3 +1,5 @@
+// src/components/SearchSection.jsx
+
 import React, { useState, useEffect } from 'react';
 import { fetchSeedData } from './seedUtils';
 
@@ -10,51 +12,47 @@ const aliasMap = {
 };
 
 const normalize = (val) =>
-  aliasMap[val?.toLowerCase()] || val?.toLowerCase();
+  aliasMap[val?.toLowerCase()] || val?.toLowerCase() || "";
 
-const SearchSection = ({ selectedCase = 'all', seedData }) => {
+const SearchSection = ({ selectedCase = 'all' }) => {
   const [query, setQuery] = useState('');
   const [filtered, setFiltered] = useState([]);
   const [allSeeds, setAllSeeds] = useState([]);
 
   useEffect(() => {
-    if (seedData?.length) {
-      setAllSeeds(seedData);
-    } else {
-      fetchSeedData().then(setAllSeeds);
-    }
-  }, [seedData]);
+    const load = async () => {
+      const data = await fetchSeedData();
+      setAllSeeds(data);
+      setFiltered(data);
+    };
+    load();
+  }, []);
 
   useEffect(() => {
-    const q = normalize(query);
-    const matches = allSeeds.filter(entry => {
-      const matchesCase = selectedCase === 'all' || entry.case === selectedCase;
-      return (
-        matchesCase &&
-        (
-          entry.slot?.toString().includes(q) ||
-          normalize(entry.breeder).includes(q) ||
-          normalize(entry.strain).includes(q)
-        )
-      );
-    });
-    setFiltered(matches);
-  }, [query, selectedCase, allSeeds]);
+    const term = normalize(query);
+    const results = allSeeds.filter(
+      (entry) =>
+        entry.slot?.toString().includes(term) ||
+        normalize(entry.breeder).includes(term) ||
+        normalize(entry.alias).includes(term) ||
+        entry.strain?.toLowerCase().includes(term)
+    );
+    setFiltered(results);
+  }, [query, allSeeds]);
 
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-2">Global Seed Search</h2>
       <input
         type="text"
         placeholder="Search by breeder, strain, or slot..."
-        className="p-2 border rounded w-full mb-4"
+        className="w-full p-2 border rounded mb-4"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
       {filtered.map((entry, idx) => (
-        <div key={idx} className="p-2 mb-2 border rounded bg-white shadow-sm">
-          <strong>Slot {entry.slot ?? '–'}</strong> – {entry.breeder ?? '–'} – {entry.strain ?? '–'} ({entry.sex ?? ''} {entry.type ?? ''})<br />
-          <small className="text-xs text-gray-500">| {entry.case}</small>
+        <div key={idx} className="p-3 mb-2 bg-white shadow rounded">
+          <strong>Slot {entry.slot} – {entry.strain || '–'} ({entry.sex || '–'} / {entry.type || '–'})</strong>
+          <div className="text-sm text-gray-700">| {entry.breeder} – {entry.case}</div>
         </div>
       ))}
     </div>
