@@ -1,14 +1,6 @@
 import React from 'react';
 import './App.css';
-import seedData from '../components/seedData'; // your locked-in working seed source
-
-// --- Emoji Icons ---
-const DNAIcon = () => (
-  <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🧬</span>
-);
-const BudIcon = () => (
-  <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🌿</span>
-);
+import { dnaIcon, budIcon } from '../components/seedData';
 
 // --- Alias Mapping ---
 const breederAliases = {
