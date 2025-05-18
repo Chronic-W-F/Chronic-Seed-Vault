@@ -46,7 +46,7 @@ export async function fetchSeedData() {
 
       return lines.map((line) => {
         const parts = line.split(" – ");
-        const slot = parseInt(parts[0].replace("Slot ", "").trim());
+        const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
         const breeder = parts[1]?.trim();
         const strain = parts[2]?.trim();
         const sex = parts[3]?.trim();
