@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.css';
 import { seedData, DNAIcon, BudIcon } from '../components/seedData.jsx';
-import SearchSection from './components/SearchSection';
-
+import SearchSection from '../components/SearchSection.jsx';
 // --- Vault Summary ---
 const getVaultStats = (data) => {
   const breeders = new Set();
