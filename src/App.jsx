@@ -1,7 +1,7 @@
 // trigger rebuild
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils.js';
+import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils.jsx';
 import SearchSection from './components/SearchSection';
 
 const getVaultSummary = (data) => {
