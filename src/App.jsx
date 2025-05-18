@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import seedData from '../componets/seedData'; // your locked-in working seed source
+import seedData from '../components/seedData'; // your locked-in working seed source
 
 // --- Emoji Icons ---
 const DNAIcon = () => (
