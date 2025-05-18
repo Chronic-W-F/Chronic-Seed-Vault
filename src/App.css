@@ -1,0 +1,10 @@
+body {
+  font-family: sans-serif;
+  background-color: #f7fdf7;
+  color: #333;
+}
+
+.vault-summary {
+  background-color: #e6fbe6;
+  border: 1px solid #b2e2b2;
+}
