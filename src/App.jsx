@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const CASES = {
-  '': '',
   'Total Health Connections': 'https://docs.google.com/document/d/1FSxo3B5Sw4oNX8eD6akMLmLQi_8gL7quxWvT4k8-dlk/export?format=txt',
   'Autoflower Case': 'https://docs.google.com/document/d/1RKRh2B2GWkopW5eKG2SYkM3dF7kfXnO6jsdeyox13Cc/export?format=txt',
   'Red/Black Case Photoperiods': 'https://docs.google.com/document/d/1J2jWK6EEERu834e2wR--hoABcgxrpppkpNk2r_H8V-0/export?format=txt',
@@ -11,28 +10,32 @@ const CASES = {
 };
 
 function App() {
-  const [entries, setEntries] = useState([]);
+  const [allEntries, setAllEntries] = useState([]);
   const [query, setQuery] = useState('');
-  const [selectedCase, setSelectedCase] = useState('');
 
   useEffect(() => {
-    async function fetchData() {
-      if (!selectedCase) return;
-      try {
-        const url = `${CASES[selectedCase]}&nocache=${Date.now()}`;
-        const res = await fetch(`/api/seedlist?url=${encodeURIComponent(url)}`);
-        const text = await res.text();
-        const lines = text.split('\n').filter(line => line.trim().length > 0);
-        setEntries(lines);
-      } catch (err) {
-        setEntries([`Error: ${err.message}`]);
+    async function fetchAllCases() {
+      const results = [];
+      for (const [label, url] of Object.entries(CASES)) {
+        try {
+          const res = await fetch(`/api/seedlist?url=${encodeURIComponent(url)}&nocache=${Date.now()}`);
+          const text = await res.text();
+          const lines = text.split('\n').filter(line => line.trim().length > 0);
+          for (const line of lines) {
+            results.push({ case: label, line });
+          }
+        } catch (err) {
+          results.push({ case: label, line: `Error loading ${label}: ${err.message}` });
+        }
       }
+      setAllEntries(results);
     }
-    fetchData();
-  }, [selectedCase]);
 
-  const filtered = entries.filter(line =>
-    line.toLowerCase().includes(query.toLowerCase())
+    fetchAllCases();
+  }, []);
+
+  const filtered = allEntries.filter(entry =>
+    entry.line.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
@@ -41,35 +44,22 @@ function App() {
         Chronic Seed Vault
       </h1>
 
-      <select
-        value={selectedCase}
-        onChange={e => {
-          setSelectedCase(e.target.value);
-          setQuery('');
-        }}
-        style={{ marginBottom: '1rem', padding: '0.5rem', width: '100%' }}
-      >
-        <option value="">Select a seed case...</option>
-        {Object.keys(CASES).filter(name => name).map(name => (
-          <option key={name} value={name}>{name}</option>
-        ))}
-      </select>
-
       <input
         type="text"
-        placeholder="Search by strain, breeder, slot, etc..."
+        placeholder="Search all seed cases by strain, breeder, slot, etc..."
         value={query}
         onChange={e => setQuery(e.target.value)}
         style={{ marginBottom: '1.5rem', width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
       />
 
       <div>
-        {filtered.map((line, i) => (
+        {filtered.map((entry, i) => (
           <div key={i} style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '4px', marginBottom: '1rem', backgroundColor: '#fff' }}>
-            {line}
+            <strong style={{ fontSize: '0.9rem', color: '#555' }}>{entry.case}</strong>
+            <div>{entry.line}</div>
           </div>
         ))}
-        {selectedCase && filtered.length === 0 && (
+        {filtered.length === 0 && (
           <p style={{ textAlign: 'center', color: '#888' }}>No matches found.</p>
         )}
       </div>
