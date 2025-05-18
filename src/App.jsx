@@ -1,21 +1,32 @@
-// trigger rebuild
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils.jsx';
 import SearchSection from './components/SearchSection.jsx';
 
 const getVaultSummary = (data) => {
+  const aliasMap = {
+    copy: 'copycat genetics',
+    copycat: 'copycat genetics',
+    thc: 'total health connections',
+    dwp: 'dadweedproject',
+    cwf: 'chronic worm farmer',
+  };
+
   const breeders = new Set();
-  const strainSet = new Set();
+  const strains = new Set();
 
   data.forEach(({ breeder, strain }) => {
-    if (breeder) breeders.add(breeder.toLowerCase());
-    if (strain) strainSet.add(strain.toLowerCase());
+    if (breeder) {
+      const key = breeder.toLowerCase();
+      const normalized = aliasMap[key] || key;
+      breeders.add(normalized);
+    }
+    if (strain) strains.add(strain.toLowerCase());
   });
 
   return {
     totalBreeders: breeders.size,
-    totalStrains: strainSet.size,
+    totalStrains: strains.size,
   };
 };
 
@@ -47,7 +58,6 @@ function App() {
       setSeedData(data);
       setSummary(getVaultSummary(data));
     };
-
     loadData();
   }, []);
 
