@@ -1,89 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import SearchSection from './components/SearchSection';
-import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils';
+import { fetchSeedData } from './seedUtils';
+import { VaultSummary } from './VaultSummary';
 
-const getVaultSummary = (data) => {
-  const aliasMap = {
-    copy: 'copycat genetics',
-    copycat: 'copycat genetics',
-    thc: 'total health connections',
-    dwp: 'dadweedproject',
-    cwf: 'chronic worm farmer',
-  };
-
-  const breeders = new Set();
-  const strains = new Set();
-
-  data.forEach(({ breeder, strain }) => {
-    if (breeder) {
-      const key = breeder.toLowerCase();
-      const normalized = aliasMap[key] || key;
-      breeders.add(normalized);
-    }
-    if (strain) strains.add(strain.toLowerCase());
-  });
-
-  return {
-    totalBreeders: breeders.size,
-    totalStrains: strains.size,
-  };
+const aliasMap = {
+  copy: 'copycat genetics',
+  copycat: 'copycat genetics',
+  thc: 'total health connections',
+  dwp: 'dadweedproject',
+  cwf: 'chronic worm farmer',
 };
 
-const VaultSummary = ({ breeders, strains }) => (
-  <div className="vault-summary p-4 bg-green-100 rounded-xl shadow-md mb-6">
-    <h2 className="text-lg sm:text-xl font-bold text-green-900 mb-2">
-      Chronic Seed Vault Summary
-    </h2>
-    <div className="flex flex-col sm:flex-row sm:space-x-4">
-      <div className="flex items-center mb-2 sm:mb-0">
-        <DNAIcon />
-        <span className="font-medium">{breeders} Unique Breeders</span>
-      </div>
-      <div className="flex items-center">
-        <BudIcon />
-        <span className="font-medium">{strains} Unique Strains</span>
-      </div>
-    </div>
-  </div>
-);
+const normalize = (val) =>
+  (val && aliasMap[val.toLowerCase()]) || val?.toLowerCase() || '';
 
-function App() {
+const App = () => {
   const [seedData, setSeedData] = useState([]);
   const [summary, setSummary] = useState({ totalBreeders: 0, totalStrains: 0 });
+  const [selectedCase, setSelectedCase] = useState('all');
+  const [query, setQuery] = useState('');
+  const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       const data = await fetchSeedData();
       setSeedData(data);
-      setSummary(getVaultSummary(data));
+
+      const breeders = new Set();
+      const strains = new Set();
+
+      data.forEach(({ breeder, strain }) => {
+        if (breeder) breeders.add(breeder.toLowerCase());
+        if (strain) strains.add(strain.toLowerCase());
+      });
+
+      setSummary({
+        totalBreeders: breeders.size,
+        totalStrains: strains.size,
+      });
     };
+
     loadData();
   }, []);
 
-  return (
-    <div className="App container mx-auto px-4 py-6">
-      <header className="mb-6 text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold text-green-800">
-          Chronic Seed Vault
-        </h1>
-        <p className="text-sm text-gray-600">Search across all your seed cases</p>
-      </header>
+  useEffect(() => {
+    const q = normalize(query);
+    if (!q) {
+      setFiltered(seedData);
+    } else {
+      const results = seedData.filter(({ breeder, strain }) => {
+        const b = normalize(breeder);
+        const s = normalize(strain);
+        return b.includes(q) || s.includes(q);
+      });
+      setFiltered(results);
+    }
+  }, [query, seedData]);
 
-      <VaultSummary
-        breeders={summary.totalBreeders}
-        strains={summary.totalStrains}
+  return (
+    <div className="app-container p-4">
+      <h1 className="text-2xl font-bold mb-4">Chronic Seed Vault</h1>
+      <VaultSummary breeders={summary.totalBreeders} strains={summary.totalStrains} />
+      
+      <input
+        type="text"
+        placeholder="Search breeders or strains..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="border p-2 rounded w-full mt-4"
       />
 
-      {summary.totalBreeders === 0 && (
-        <div className="text-red-600 text-sm mb-4">
-          No seed data loaded. Check Google Doc links or formatting.
-        </div>
-      )}
-
-      <SearchSection seedData={seedData} />
+      <div className="mt-4">
+        {filtered.map((entry, i) => (
+          <div key={i} className="border p-2 rounded mb-2 bg-white shadow">
+            <strong>Case:</strong> {entry.case} <br />
+            <strong>Slot:</strong> {entry.slot} <br />
+            <strong>Breeder:</strong> {entry.breeder} <br />
+            <strong>Strain:</strong> {entry.strain} <br />
+            <strong>Sex:</strong> {entry.sex} <br />
+            <strong>Type:</strong> {entry.type}
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
