@@ -27,3 +27,6 @@ function App() {
 
   // Return JSX below here (e.g. dropdown, input, results...)
 }
+// ... all the code above ...
+
+export default App;
