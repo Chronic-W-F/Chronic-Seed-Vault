@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { seedData, DNAIcon, BudIcon } from './components/seedData';
+import { seedData, DNAIcon, BudIcon } from './components/seedData.jsx';
 import SearchSection from './components/SearchSection';
 
 // --- Vault Summary ---
