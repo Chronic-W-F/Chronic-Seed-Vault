@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils.jsx';
-import SearchSection from './components/SearchSection.jsx';
+import SearchSection from './components/SearchSection';
+import { fetchSeedData, DNAIcon, BudIcon } from './components/seedUtils';
 
 const getVaultSummary = (data) => {
   const aliasMap = {
