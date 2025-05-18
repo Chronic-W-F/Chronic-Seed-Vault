@@ -6,5 +6,6 @@ export const BudIcon = () => (
   <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🌿</span>
 );
 
-// Export dummy seedData for now if needed
-export const seedData = [];
+const seedData = []; // or your real data
+
+export default seedData;
