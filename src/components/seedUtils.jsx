@@ -1,5 +1,3 @@
-// src/components/seedUtils.js
-
 const docUrls = [
   {
     name: "Total Health Connections",
