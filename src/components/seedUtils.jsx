@@ -1,25 +1,4 @@
-const aliasMap = {
-  thc: 'Total Health Connections',
-  "total health": 'Total Health Connections',
-  "total health creations": 'Total Health Connections',
-  "total health connection": 'Total Health Connections',
-
-  copy: 'CopyCat Genetics',
-  "copycat": 'CopyCat Genetics',
-  "copy cat": 'CopyCat Genetics',
-  "copycat genetics": 'CopyCat Genetics',
-
-  dwp: 'DadWeedProject',
-  "dadweed": 'DadWeedProject',
-  "dad weed": 'DadWeedProject',
-  "dad weed project": 'DadWeedProject',
-  "dadweed project": 'DadWeedProject',
-  "dadweedproject": 'DadWeedProject',
-
-  cwf: 'Chronic Worm Farmer',
-  "chronic worm farmer": 'Chronic Worm Farmer',
-  "chronic_worm_farmer": 'Chronic Worm Farmer',
-};
+// src/components/seedUtils.js
 
 const docUrls = [
   {
@@ -35,12 +14,12 @@ const docUrls = [
     url: "https://docs.google.com/document/d/1J2jWK6EEERu834e2wR--hoABcgxrpppkpNk2r_H8V-0/export?format=txt",
   },
   {
-    name: "Black Case Photoperiods",
-    url: "https://docs.google.com/document/d/1f2JwxGy_xlhVbYW11NCP06t6qXbai_lKHC_UCrWsNgM/export?format=txt",
-  },
-  {
     name: "Blue Case Photos",
     url: "https://docs.google.com/document/d/1qoE2gM291GBNlX5pP9dtnNqqNF-aZzb4P-_w-DLUvZ8/export?format=txt",
+  },
+  {
+    name: "Black Case Photoperiods",
+    url: "https://docs.google.com/document/d/1f2JwxGy_xlhVbYW11NCP06t6qXbai_lKHC_UCrWsNgM/export?format=txt",
   },
   {
     name: "Chronic Worm Farmer",
@@ -48,43 +27,35 @@ const docUrls = [
   },
 ];
 
-function normalizeAliasFromLine(line = "") {
-  const cleaned = line.toLowerCase().replace(/\s+/g, '').replace(/[^a-z]/g, '');
-  const match = Object.keys(aliasMap).find(key =>
-    cleaned.includes(key.replace(/\s+/g, '').replace(/[^a-z]/g, ''))
-  );
-  return match ? aliasMap[match] : "";
-}
+export const fetchSeedData = async () => {
+  const allData = [];
 
-export async function fetchSeedData() {
-  const results = await Promise.all(
-    docUrls.map(async ({ name, url }) => {
-      try {
-        const res = await fetch(url);
-        const text = await res.text();
-        const lines = text.split("\n").filter(Boolean);
+  for (const { name, url } of docUrls) {
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
 
-        return lines.map((line) => {
-          const rawSlot = line.match(/^\d+/)?.[0];
-          const slot = rawSlot ? parseInt(rawSlot) : null;
+      const lines = text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line && !line.toLowerCase().includes('slot'));
 
-          return {
-            slot,
-            breeder: "",
-            strain: "",
-            sex: "",
-            type: "",
-            case: name,
-            alias: normalizeAliasFromLine(line),
-            raw: `${name}: ${line.trim()}`,
-          };
+      for (const line of lines) {
+        const [slot, breeder, strain, sex, type] = line.split(/\s*–\s*/);
+        allData.push({
+          slot: slot?.trim(),
+          breeder: breeder?.trim(),
+          strain: strain?.trim(),
+          sex: sex?.trim(),
+          type: type?.trim(),
+          case: name,
+          raw: line.trim(),
         });
-      } catch (err) {
-        console.error(`Error loading ${name}:`, err);
-        return [];
       }
-    })
-  );
+    } catch (err) {
+      console.error(`Failed to load ${name}:`, err);
+    }
+  }
 
-  return results.flat();
-}
+  return allData;
+};
