@@ -19,7 +19,7 @@ function App() {
     async function fetchData() {
       if (!selectedCase) return;
       try {
-        const url = `${CASES[selectedCase]}?nocache=${Date.now()}`;
+        const url = `${CASES[selectedCase]}&nocache=${Date.now()}`;
         const res = await fetch(`/api/seedlist?url=${encodeURIComponent(url)}`);
         const text = await res.text();
         const lines = text.split('\n').filter(line => line.trim().length > 0);
