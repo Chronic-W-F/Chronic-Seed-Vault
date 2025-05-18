@@ -56,13 +56,25 @@ const App = () => {
     const q = normalize(query);
 
     const newFiltered = seedData.filter((entry) => {
-      const breederMatch = normalize(entry.breeder).includes(q);
-      const strainMatch = normalize(entry.strain).includes(q);
-      const slotMatch = normalize(entry.slot).includes(q);
-      const rawMatch = normalize(entry.raw).includes(q);
+      const breeder = normalize(entry.breeder);
+      const strain = normalize(entry.strain);
+      const slot = normalize(entry.slot);
+      const raw = normalize(entry.raw);
+      const caseName = entry.case;
 
-      if (q) return breederMatch || strainMatch || slotMatch || rawMatch;
-      if (selectedCase) return entry.case === selectedCase;
+      if (q) {
+        return (
+          breeder.includes(q) ||
+          strain.includes(q) ||
+          slot.includes(q) ||
+          raw.includes(q)
+        );
+      }
+
+      if (selectedCase) {
+        return caseName === selectedCase;
+      }
+
       return false;
     });
 
