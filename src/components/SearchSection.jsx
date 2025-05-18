@@ -1,5 +1,3 @@
-// src/components/SearchSection.jsx
-
 import React, { useState, useEffect } from 'react';
 import { fetchSeedData } from './seedUtils';
 
@@ -12,7 +10,7 @@ const aliasMap = {
 };
 
 const normalize = (val) =>
-  aliasMap[val?.toLowerCase()] || val?.toLowerCase() || "";
+  (val && aliasMap[val.toLowerCase()]) || val?.toLowerCase() || "";
 
 const SearchSection = ({ selectedCase = 'all' }) => {
   const [query, setQuery] = useState('');
@@ -21,22 +19,36 @@ const SearchSection = ({ selectedCase = 'all' }) => {
 
   useEffect(() => {
     const load = async () => {
-      const data = await fetchSeedData();
-      setAllSeeds(data);
-      setFiltered(data);
+      try {
+        const data = await fetchSeedData();
+        const valid = data.filter(
+          (entry) => entry && entry.breeder && entry.slot !== undefined
+        );
+        setAllSeeds(valid);
+        setFiltered(valid);
+      } catch (err) {
+        console.error('Seed data fetch failed:', err);
+      }
     };
     load();
   }, []);
 
   useEffect(() => {
     const term = normalize(query);
-    const results = allSeeds.filter(
-      (entry) =>
-        entry.slot?.toString().includes(term) ||
-        normalize(entry.breeder).includes(term) ||
-        normalize(entry.alias).includes(term) ||
-        entry.strain?.toLowerCase().includes(term)
-    );
+    const results = allSeeds.filter((entry) => {
+      const breeder = normalize(entry.breeder);
+      const alias = normalize(entry.alias);
+      const strain = entry.strain?.toLowerCase() || '';
+      const slotStr = entry.slot?.toString() || '';
+
+      return (
+        slotStr.includes(term) ||
+        breeder.includes(term) ||
+        alias.includes(term) ||
+        strain.includes(term)
+      );
+    });
+
     setFiltered(results);
   }, [query, allSeeds]);
 
@@ -51,8 +63,12 @@ const SearchSection = ({ selectedCase = 'all' }) => {
       />
       {filtered.map((entry, idx) => (
         <div key={idx} className="p-3 mb-2 bg-white shadow rounded">
-          <strong>Slot {entry.slot} – {entry.strain || '–'} ({entry.sex || '–'} / {entry.type || '–'})</strong>
-          <div className="text-sm text-gray-700">| {entry.breeder} – {entry.case}</div>
+          <strong>
+            Slot {entry.slot ?? '–'} – {entry.strain || '–'} ({entry.sex || '–'} / {entry.type || '–'})
+          </strong>
+          <div className="text-sm text-gray-700">
+            | {entry.breeder || 'Unknown'} – {entry.case || 'Unknown Case'}
+          </div>
         </div>
       ))}
     </div>
