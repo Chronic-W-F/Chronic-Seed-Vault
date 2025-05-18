@@ -4,9 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chronic Seed Vault</title>
+    <meta name="description" content="Searchable cannabis seed catalog by Chronic-W-F" />
   </head>
-  <body>
+  <body style="margin: 0; padding: 0; font-family: sans-serif;">
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      // Prevent pull-to-refresh on mobile
+      let lastY = 0;
+      window.addEventListener('touchstart', e => {
+        lastY = e.touches[0].clientY;
+      });
+
+      window.addEventListener('touchmove', e => {
+        const currentY = e.touches[0].clientY;
+        const scrollTop = document.scrollingElement.scrollTop;
+
+        // Block downward pull at top of page
+        if (scrollTop === 0 && currentY > lastY) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    </script>
   </body>
 </html>
