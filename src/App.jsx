@@ -1,5 +1,5 @@
-import React, { useState } from 'react'; import './App.css'; import { seedData, DNAIcon, BudIcon } from '../components/seedData.jsx'; import SearchSection from '../components/SearchSection.jsx';
-
+import React, { useState } from 'react'; import './App.css'; import { fetchSeedData, DNAIcon, BudIcon } from '../components/seedData.jsx';
+import SearchSection from '../components/SearchSection.jsx';
 const getVaultSummary = (data) => { const breeders = new Set(); const strainSet = new Set();
 
 data.forEach(({ breeder, strain }) => { if (breeder) breeders.add(breeder); if (strain) strainSet.add(strain.toLowerCase()); });
