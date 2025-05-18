@@ -80,6 +80,3 @@ function normalizeAlias(breeder = "") {
   const key = breeder.toLowerCase().replace(/\s+/g, "");
   return aliasMap[key] || breeder;
 }
-
-// FINAL EXPORT
-export { fetchSeedData, DNAIcon, BudIcon };
