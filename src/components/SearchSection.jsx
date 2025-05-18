@@ -1,31 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { fetchSeedData } from './seedUtils.jsx';
+import { fetchSeedData } from './seedUtils';
 
-const normalizeAlias = (text) => {
-  const lower = text.toLowerCase();
-  if (lower === 'copy' || lower === 'copycat') return 'copycat genetics';
-  if (lower === 'thc') return 'total health connections';
-  if (lower === 'dwp' || lower === 'dadweedproject') return 'dadweed project';
-  return lower;
+const aliasMap = {
+  copy: 'copycat genetics',
+  copycat: 'copycat genetics',
+  thc: 'total health connections',
+  dwp: 'dadweedproject',
+  cwf: 'chronic worm farmer',
 };
 
-const SearchSection = ({ seedData = [], selectedCase = 'all' }) => {
+const normalize = (val) =>
+  aliasMap[val?.toLowerCase()] || val?.toLowerCase();
+
+const SearchSection = ({ selectedCase = 'all', seedData }) => {
   const [query, setQuery] = useState('');
   const [filtered, setFiltered] = useState([]);
+  const [allSeeds, setAllSeeds] = useState([]);
 
   useEffect(() => {
-    const q = normalizeAlias(query);
-    const matches = seedData.filter((entry) => {
+    if (seedData?.length) {
+      setAllSeeds(seedData);
+    } else {
+      fetchSeedData().then(setAllSeeds);
+    }
+  }, [seedData]);
+
+  useEffect(() => {
+    const q = normalize(query);
+    const matches = allSeeds.filter(entry => {
       const matchesCase = selectedCase === 'all' || entry.case === selectedCase;
       return (
         matchesCase &&
-        (entry.slot?.toString().includes(q) ||
-          normalizeAlias(entry.breeder ?? '').includes(q) ||
-          (entry.strain ?? '').toLowerCase().includes(q))
+        (
+          entry.slot?.toString().includes(q) ||
+          normalize(entry.breeder).includes(q) ||
+          normalize(entry.strain).includes(q)
+        )
       );
     });
     setFiltered(matches);
-  }, [query, selectedCase, seedData]);
+  }, [query, selectedCase, allSeeds]);
 
   return (
     <div>
@@ -37,13 +51,10 @@ const SearchSection = ({ seedData = [], selectedCase = 'all' }) => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-
       {filtered.map((entry, idx) => (
         <div key={idx} className="p-2 mb-2 border rounded bg-white shadow-sm">
-          <strong>Slot {entry.slot ?? '–'}</strong> – {entry.breeder ?? '–'} – {entry.strain ?? '–'}<br />
-          <span className="text-sm text-gray-600">
-            {entry.sex ?? ''} {entry.type ?? ''} | {entry.case ?? ''}
-          </span>
+          <strong>Slot {entry.slot ?? '–'}</strong> – {entry.breeder ?? '–'} – {entry.strain ?? '–'} ({entry.sex ?? ''} {entry.type ?? ''})<br />
+          <small className="text-xs text-gray-500">| {entry.case}</small>
         </div>
       ))}
     </div>
