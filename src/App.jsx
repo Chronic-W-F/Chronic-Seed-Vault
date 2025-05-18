@@ -9,6 +9,28 @@ const CASES = {
   'Chronic Worm Farmer': 'https://docs.google.com/document/d/1UWskJERde9hip9FgKonDmP21GOHIcDJZS217VWGIeCc/export?format=txt',
 };
 
+const ALIASES = {
+  'copy': 'copycat genetics',
+  'copycat': 'copycat genetics',
+  'thc': 'total health connections',
+  'cwf': 'chronic worm farmer',
+  'dadweed': 'dadweedproject',
+  'dwp': 'dadweedproject',
+  '86 genetics': '86genetics',
+  'wallapini': 'walipini seeds',
+  'walipini': 'walipini seeds',
+  'greenpoint': 'greenpoint seeds',
+  'american cultivars-': 'american cultivars',
+  'srw': 'skunk really works',
+  'skunk really works': 'skunk really works',
+  '34 mongrels': '34 mongrels genetics',
+};
+
+function normalizeQuery(query) {
+  const lower = query.trim().toLowerCase();
+  return ALIASES[lower] || lower;
+}
+
 function App() {
   const [allEntries, setAllEntries] = useState([]);
   const [query, setQuery] = useState('');
@@ -35,13 +57,14 @@ function App() {
     fetchAllCases();
   }, []);
 
+  const normalizedQuery = normalizeQuery(query);
   const filtered = allEntries.filter(entry => {
     if (query.trim() !== '') {
-      return entry.line.toLowerCase().includes(query.toLowerCase());
+      return entry.line.toLowerCase().includes(normalizedQuery);
     } else if (selectedCase !== '') {
       return entry.case === selectedCase;
     } else {
-      return false; // Show nothing until a case is selected or searched
+      return false;
     }
   });
 
