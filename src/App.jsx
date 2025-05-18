@@ -59,21 +59,22 @@ const App = () => {
       const raw = normalize(entry.raw);
       const caseName = entry.case;
 
-      if (rawQuery) {
-        if (aliasTarget) {
-          // Exact alias match: only match breeder
-          return breeder === aliasTarget;
-        } else {
-          // Fuzzy fallback search
-          return (
-            breeder.includes(rawQuery) ||
-            strain.includes(rawQuery) ||
-            slot.includes(rawQuery) ||
-            raw.includes(rawQuery)
-          );
-        }
+      // ALIAS MATCH (exact override)
+      if (aliasTarget) {
+        return breeder.includes(normalize(aliasTarget));
       }
 
+      // FUZZY SEARCH
+      if (rawQuery) {
+        return (
+          breeder.includes(rawQuery) ||
+          strain.includes(rawQuery) ||
+          slot.includes(rawQuery) ||
+          raw.includes(rawQuery)
+        );
+      }
+
+      // CASE FILTER ONLY
       if (selectedCase) return caseName === selectedCase;
 
       return false;
