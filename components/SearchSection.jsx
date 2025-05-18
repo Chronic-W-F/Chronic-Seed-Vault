@@ -9,18 +9,13 @@ const normalizeAlias = (text) => {
   return lower;
 };
 
-const SearchSection = ({ selectedCase = 'all' }) => {
+const SearchSection = ({ seedData = [], selectedCase = 'all' }) => {
   const [query, setQuery] = useState('');
   const [filtered, setFiltered] = useState([]);
-  const [allSeeds, setAllSeeds] = useState([]);
-
-  useEffect(() => {
-    fetchSeedData().then(setAllSeeds);
-  }, []);
 
   useEffect(() => {
     const q = normalizeAlias(query);
-    const matches = allSeeds.filter((entry) => {
+    const matches = seedData.filter((entry) => {
       const matchesCase = selectedCase === 'all' || entry.case === selectedCase;
       return (
         matchesCase &&
@@ -30,7 +25,7 @@ const SearchSection = ({ selectedCase = 'all' }) => {
       );
     });
     setFiltered(matches);
-  }, [query, selectedCase, allSeeds]);
+  }, [query, selectedCase, seedData]);
 
   return (
     <div>
