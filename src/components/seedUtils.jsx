@@ -1,16 +1,24 @@
 const aliasMap = {
-  thc: 'total health connections',
-  'total health': 'total health connections',
-  'total health creations': 'total health connections',
-  copy: 'copycat genetics',
-  copycat: 'copycat genetics',
-  'copy cat': 'copycat genetics',
-  dwp: 'dadweedproject',
-  dadweed: 'dadweedproject',
-  'dadweed project': 'dadweedproject',
-  cwf: 'chronic worm farmer',
-  'chronic worm farmer': 'chronic worm farmer',
-  chronic_worm_farmer: 'chronic worm farmer',
+  thc: 'Total Health Connections',
+  "total health": 'Total Health Connections',
+  "total health creations": 'Total Health Connections',
+  "total health connection": 'Total Health Connections',
+
+  copy: 'CopyCat Genetics',
+  "copycat": 'CopyCat Genetics',
+  "copy cat": 'CopyCat Genetics',
+  "copycat genetics": 'CopyCat Genetics',
+
+  dwp: 'DadWeedProject',
+  "dadweed": 'DadWeedProject',
+  "dad weed": 'DadWeedProject',
+  "dad weed project": 'DadWeedProject',
+  "dadweed project": 'DadWeedProject',
+  "dadweedproject": 'DadWeedProject',
+
+  cwf: 'Chronic Worm Farmer',
+  "chronic worm farmer": 'Chronic Worm Farmer',
+  "chronic_worm_farmer": 'Chronic Worm Farmer',
 };
 
 const docUrls = [
@@ -40,8 +48,12 @@ const docUrls = [
   },
 ];
 
-function normalize(val = "") {
-  return val.toLowerCase().replace(/\s+/g, "").trim();
+function normalizeAliasFromLine(line = "") {
+  const cleaned = line.toLowerCase().replace(/\s+/g, '').replace(/[^a-z]/g, '');
+  const match = Object.keys(aliasMap).find(key =>
+    cleaned.includes(key.replace(/\s+/g, '').replace(/[^a-z]/g, ''))
+  );
+  return match ? aliasMap[match] : "";
 }
 
 export async function fetchSeedData() {
@@ -55,11 +67,6 @@ export async function fetchSeedData() {
         return lines.map((line) => {
           const rawSlot = line.match(/^\d+/)?.[0];
           const slot = rawSlot ? parseInt(rawSlot) : null;
-          const lowerLine = line.toLowerCase();
-
-          const normalizedAliases = Object.entries(aliasMap)
-            .filter(([alias]) => lowerLine.includes(alias))
-            .map(([_, mapped]) => mapped);
 
           return {
             slot,
@@ -68,7 +75,7 @@ export async function fetchSeedData() {
             sex: "",
             type: "",
             case: name,
-            alias: normalizedAliases[0] || "",
+            alias: normalizeAliasFromLine(line),
             raw: `${name}: ${line.trim()}`,
           };
         });
