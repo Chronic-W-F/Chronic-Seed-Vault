@@ -8,13 +8,11 @@ const aliasMap = {
   'copy cat': 'copycat genetics',
   thc: 'total health connections',
   'total health': 'total health connections',
-  'total health creations': 'total health connections',
   dwp: 'dadweedproject',
   dadweed: 'dadweedproject',
   'dadweed project': 'dadweedproject',
   cwf: 'chronic worm farmer',
   'chronic worm farmer': 'chronic worm farmer',
-  'chronic_worm_farmer': 'chronic worm farmer',
 };
 
 const normalize = (val) => {
@@ -31,6 +29,7 @@ const App = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      console.log(">>> Loading seed data...");
       const data = await fetchSeedData();
       setSeedData(data);
 
@@ -57,18 +56,13 @@ const App = () => {
     const q = normalize(query);
 
     const newFiltered = seedData.filter((entry) => {
-      const rawMatch = normalize(entry.raw).includes(q);
       const breederMatch = normalize(entry.breeder).includes(q);
       const strainMatch = normalize(entry.strain).includes(q);
       const slotMatch = normalize(entry.slot).includes(q);
+      const rawMatch = normalize(entry.raw).includes(q);
 
-      if (q) {
-        // If there's a search query, ignore selectedCase
-        return rawMatch || breederMatch || strainMatch || slotMatch;
-      } else if (selectedCase) {
-        return entry.case === selectedCase;
-      }
-
+      if (q) return breederMatch || strainMatch || slotMatch || rawMatch;
+      if (selectedCase) return entry.case === selectedCase;
       return false;
     });
 
