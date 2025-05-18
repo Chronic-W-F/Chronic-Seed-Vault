@@ -61,17 +61,19 @@ function App() {
   }, [selectedCase]);
 
   const normalizedSearch = search.toLowerCase().trim();
-  const resolvedAlias = ALIASES[normalizedSearch] || normalizedSearch;
-
-  // Build all known aliases pointing to the same concept
-  const allAliasesForSearch = Object.entries(ALIASES)
-    .filter(([key, val]) => val === resolvedAlias || key === resolvedAlias)
-    .map(([key]) => key);
+  const aliasTarget = ALIASES[normalizedSearch];
 
   const filtered = search
     ? allData.filter(entry => {
         const text = entry.text.toLowerCase();
-        return allAliasesForSearch.some(alias => text.includes(alias));
+        if (aliasTarget) {
+          const allAliasVariants = Object.entries(ALIASES)
+            .filter(([key, val]) => val === aliasTarget)
+            .map(([key]) => key);
+          return allAliasVariants.some(alias => text.includes(alias));
+        } else {
+          return text.includes(normalizedSearch);
+        }
       })
     : selectedCase
     ? data
