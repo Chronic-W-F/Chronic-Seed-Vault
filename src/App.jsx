@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { DNAIcon, BudIcon } from '../components/seedData';
+import { DNAIcon, BudIcon } from '../components/seedData.jsx';
 
 // --- Alias Mapping ---
 const breederAliases = {
