@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchSeedData } from './components/seedUtils';
 import { VaultSummary } from './components/VaultSummary';
 
-const normalize = (val) => val?.toLowerCase().replace(/\s+/g, '') || '';
+const normalize = (val) => val?.toLowerCase().trim() || '';
 
 const App = () => {
   const [seedData, setSeedData] = useState([]);
@@ -37,26 +37,18 @@ const App = () => {
 
   useEffect(() => {
     const q = normalize(query);
-    let result = seedData;
+    const filteredList = seedData.filter(({ raw, alias, case: caseName }) => {
+      const matchQuery = q
+        ? normalize(raw).includes(q) || normalize(alias).includes(q)
+        : true;
+      const matchCase = selectedCase === 'All' || caseName === selectedCase;
+      return matchQuery && matchCase;
+    });
 
-    if (selectedCase !== 'All') {
-      result = result.filter((entry) => entry.case === selectedCase);
-    }
-
-    if (q) {
-      result = result.filter(
-        ({ raw, breeder, alias, strain }) =>
-          normalize(raw).includes(q) ||
-          normalize(breeder).includes(q) ||
-          normalize(alias).includes(q) ||
-          normalize(strain).includes(q)
-      );
-    }
-
-    setFiltered(result);
+    setFiltered(filteredList);
   }, [query, selectedCase, seedData]);
 
-  const uniqueCases = [...new Set(seedData.map((entry) => entry.case))].sort();
+  const caseOptions = ['All', ...Array.from(new Set(seedData.map((s) => s.case)))];
 
   return (
     <div className="p-4">
@@ -74,12 +66,11 @@ const App = () => {
       <select
         value={selectedCase}
         onChange={(e) => setSelectedCase(e.target.value)}
-        className="border p-2 rounded mb-4 w-full"
+        className="border p-2 rounded w-full mb-4"
       >
-        <option value="All">All</option>
-        {uniqueCases.map((caseName) => (
-          <option key={caseName} value={caseName}>
-            {caseName}
+        {caseOptions.map((name) => (
+          <option key={name} value={name}>
+            {name}
           </option>
         ))}
       </select>
