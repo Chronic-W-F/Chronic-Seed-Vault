@@ -6,6 +6,7 @@ export const BudIcon = () => (
   <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🌿</span>
 );
 
+// Load seed data from multiple Google Docs
 const docUrls = [
   {
     name: "Total Health Connections",
@@ -36,27 +37,25 @@ const docUrls = [
 export async function fetchSeedData() {
   const results = await Promise.all(
     docUrls.map(async ({ name, url }) => {
-      try {
-        const res = await fetch(url);
-        const text = await res.text();
+      const res = await fetch(url);
+      const text = await res.text();
 
-        const lines = text
-          .split("\n")
-          .filter((line) => line.trim() && !line.toLowerCase().includes("void"));
+      const lines = text
+        .split("\n")
+        .filter((line) => line.trim() && !line.toLowerCase().includes("void"));
 
-        return lines.map((line) => {
-          const parts = line.split(" – ");
-          const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
-          const breeder = parts[1]?.trim();
-          const strain = parts[2]?.trim();
-          const sex = parts[3]?.trim();
-          const type = parts[4]?.trim();
-          return { slot, breeder, strain, sex, type, case: name };
-        });
-      } catch (err) {
-        console.error(`Failed to fetch ${name}:`, err);
-        return [];
-      }
+      return lines.map((line) => {
+        const parts = line.split(" – ");
+        const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
+        return {
+          slot,
+          breeder: parts[1]?.trim() || '–',
+          strain: parts[2]?.trim() || '–',
+          sex: parts[3]?.trim() || '–',
+          type: parts[4]?.trim() || '–',
+          case: name,
+        };
+      });
     })
   );
 
