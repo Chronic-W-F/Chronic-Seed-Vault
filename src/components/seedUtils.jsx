@@ -1,13 +1,3 @@
-// src/components/seedUtils.jsx
-
-export const DNAIcon = () => (
-  <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🧬</span>
-);
-
-export const BudIcon = () => (
-  <span style={{ marginRight: '0.5em', verticalAlign: 'middle' }}>🌿</span>
-);
-
 const aliasMap = {
   thc: 'Total Health Connections',
   copy: 'CopyCat Genetics',
@@ -30,11 +20,11 @@ const docUrls = [
     url: "https://docs.google.com/document/d/1J2jWK6EEERu834e2wR--hoABcgxrpppkpNk2r_H8V-0/export?format=txt",
   },
   {
-    name: "Black Case",
+    name: "Black Case Photoperiods",
     url: "https://docs.google.com/document/d/1f2JwxGy_xlhVbYW11NCP06t6qXbai_lKHC_UCrWsNgM/export?format=txt",
   },
   {
-    name: "Blue Case",
+    name: "Blue Case Photos",
     url: "https://docs.google.com/document/d/1qoE2gM291GBNlX5pP9dtnNqqNF-aZzb4P-_w-DLUvZ8/export?format=txt",
   },
   {
@@ -54,9 +44,7 @@ export async function fetchSeedData() {
       try {
         const res = await fetch(url);
         const text = await res.text();
-        const lines = text
-          .split("\n")
-          .filter((line) => line.trim() && !line.toLowerCase().includes("void"));
+        const lines = text.split("\n");
 
         return lines.map((line) => {
           const parts = line.split(" – ");
