@@ -12,6 +12,7 @@ const CASES = {
 function App() {
   const [allEntries, setAllEntries] = useState([]);
   const [query, setQuery] = useState('');
+  const [selectedCase, setSelectedCase] = useState('');
 
   useEffect(() => {
     async function fetchAllCases() {
@@ -34,9 +35,15 @@ function App() {
     fetchAllCases();
   }, []);
 
-  const filtered = allEntries.filter(entry =>
-    entry.line.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = allEntries.filter(entry => {
+    if (query.trim() !== '') {
+      return entry.line.toLowerCase().includes(query.toLowerCase());
+    } else if (selectedCase !== '') {
+      return entry.case === selectedCase;
+    } else {
+      return false; // Show nothing until a case is selected or searched
+    }
+  });
 
   return (
     <div style={{ padding: '1rem', maxWidth: '700px', margin: 'auto' }}>
@@ -44,9 +51,20 @@ function App() {
         Chronic Seed Vault
       </h1>
 
+      <select
+        value={selectedCase}
+        onChange={e => setSelectedCase(e.target.value)}
+        style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}
+      >
+        <option value="">Select a seed case...</option>
+        {Object.keys(CASES).map(label => (
+          <option key={label} value={label}>{label}</option>
+        ))}
+      </select>
+
       <input
         type="text"
-        placeholder="Search all seed cases by strain, breeder, slot, etc..."
+        placeholder="Search across all cases..."
         value={query}
         onChange={e => setQuery(e.target.value)}
         style={{ marginBottom: '1.5rem', width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
