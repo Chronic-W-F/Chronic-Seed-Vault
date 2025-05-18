@@ -44,8 +44,12 @@ const App = () => {
 
     const finalFiltered = !q
       ? filteredByCase
-      : filteredByCase.filter(({ raw, alias }) => {
-          return normalize(raw).includes(q) || normalize(alias).includes(q);
+      : filteredByCase.filter(({ raw, alias, case: docCase }) => {
+          return (
+            normalize(raw).includes(q) ||
+            normalize(alias).includes(q) ||
+            normalize(docCase).includes(q)
+          );
         });
 
     setFiltered(finalFiltered);
@@ -61,7 +65,7 @@ const App = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4">
         <input
           type="text"
-          placeholder="Search any keyword..."
+          placeholder="Search any keyword, breeder, or alias..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="border p-2 rounded w-full sm:w-1/2 mb-2 sm:mb-0"
