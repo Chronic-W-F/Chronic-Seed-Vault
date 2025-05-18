@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { fetchSeedData, DNAIcon, BudIcon } from './components/seedData';
+import { fetchSeedData, DNAIcon, BudIcon } from './components/seedData.jsx';
 import SearchSection from './components/SearchSection';
 
 const getVaultSummary = (data) => {
