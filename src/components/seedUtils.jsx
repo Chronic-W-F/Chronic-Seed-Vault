@@ -47,12 +47,21 @@ export async function fetchSeedData() {
         const lines = text.split("\n");
 
         return lines.map((line) => {
-          const parts = line.split(" – ");
-          const slot = parseInt(parts[0]?.replace("Slot ", "").trim());
+          const parts = line.split(" - ");
+          const rawSlot = line.match(/^\d+/)?.[0];
+          const slot = rawSlot ? parseInt(rawSlot) : null;
+
           const breeder = parts[1]?.trim();
           const strain = parts[2]?.trim();
-          const sex = parts[3]?.trim();
-          const type = parts[4]?.trim();
+          const typeSex = parts[3]?.trim() || "";
+
+          let sex = "";
+          let type = "";
+
+          if (typeSex.toLowerCase().includes("fem")) sex = "Feminized";
+          if (typeSex.toLowerCase().includes("reg")) sex = "Regular";
+          if (typeSex.toLowerCase().includes("photo")) type = "Photoperiod";
+          if (typeSex.toLowerCase().includes("auto")) type = "Autoflower";
 
           return {
             slot,
