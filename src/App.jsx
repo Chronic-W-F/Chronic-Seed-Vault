@@ -11,13 +11,14 @@ const CASES = {
 
 const ALIASES = {
   "copy": "copycat",
-  "copycat": "copycat",
   "copycat genetics": "copycat",
-  "thc": "thc",
-  "cwf": "cwf",
-  "dwp": "dwp",
-  "dadweedproject": "dwp",
-  "dadweed project": "dwp"
+  "copycat": "copycat",
+  "thc": "total health connections",
+  "total health creations": "total health connections",
+  "cwf": "chronic worm farmer",
+  "dwp": "dadweedproject",
+  "dadweedproject": "dadweedproject",
+  "dadweed project": "dadweedproject"
 };
 
 function App() {
@@ -60,12 +61,17 @@ function App() {
   }, [selectedCase]);
 
   const normalizedSearch = search.toLowerCase().trim();
-  const alias = ALIASES[normalizedSearch] || normalizedSearch;
+  const resolvedAlias = ALIASES[normalizedSearch] || normalizedSearch;
+
+  // Build all known aliases pointing to the same concept
+  const allAliasesForSearch = Object.entries(ALIASES)
+    .filter(([key, val]) => val === resolvedAlias || key === resolvedAlias)
+    .map(([key]) => key);
 
   const filtered = search
     ? allData.filter(entry => {
         const text = entry.text.toLowerCase();
-        return text.includes(normalizedSearch) || text.includes(alias);
+        return allAliasesForSearch.some(alias => text.includes(alias));
       })
     : selectedCase
     ? data
