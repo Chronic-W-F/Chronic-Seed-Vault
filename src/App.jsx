@@ -16,19 +16,18 @@ const App = () => {
       const data = await fetchSeedData();
       setSeedData(data);
 
-      // Count unique breeders and strains based on raw line
+      console.log('Loaded seed lines:', data.length); // Debugging
+
       const breeders = new Set();
       const strains = new Set();
 
       data.forEach(({ raw }) => {
-  consdata.forEach(({ raw }) => {
-  const parts = raw.split(/\s*–\s*/);
-  const breeder = normalize(parts[1] || '');
-  const strain = normalize(parts[2] || '');
-
-  if (breeder) breeders.add(breeder);
-  if (strain) strains.add(strain);
-});
+        const parts = raw.split(/\s*–\s*/);
+        const breeder = normalize(parts[1] || '');
+        const strain = normalize(parts[2] || '');
+        if (breeder) breeders.add(breeder);
+        if (strain) strains.add(strain);
+      });
 
       setSummary({
         totalBreeders: breeders.size,
@@ -38,7 +37,7 @@ const App = () => {
       setFiltered([]); // start empty
     };
 
-    loadData(console.log('Loaded seed lines:', data.length););
+    loadData();
   }, []);
 
   useEffect(() => {
