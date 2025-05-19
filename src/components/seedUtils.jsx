@@ -38,8 +38,6 @@ export const fetchSeedData = async () => {
         .map((line) => line.trim())
         .filter((line) => line && !line.toLowerCase().includes('slot'));
 
-      console.log(`[${name}] Parsed lines:`, lines.length);
-
       for (const line of lines) {
         allData.push({
           slot: '',
