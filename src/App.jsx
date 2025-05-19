@@ -20,9 +20,10 @@ const App = () => {
       const strains = new Set();
 
       data.forEach(({ raw }) => {
-        const parts = raw.split(/\s*–\s*/);
-        const breeder = normalize(parts[1] || '');
-        const strain = normalize(parts[2] || '');
+        // Match hyphen, en dash, em dash and strip slot numbers
+        const parts = raw.split(/\s*[–—-]\s*/);
+        const breeder = normalize(parts[0]?.replace(/^\d+\.\s*/, '') || '');
+        const strain = normalize(parts[1] || '');
         if (breeder) breeders.add(breeder);
         if (strain) strains.add(strain);
       });
