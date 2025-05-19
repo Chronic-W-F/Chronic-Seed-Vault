@@ -20,14 +20,11 @@ const App = () => {
       const strains = new Set();
 
       data.forEach(({ raw }) => {
-        // Match pattern: "12. Breeder – Strain – ..."
-        const match = raw.match(/^\d+\.\s*(.*?)\s*–\s*(.*?)\s*–/);
-        if (match) {
-          const breeder = normalize(match[1]);
-          const strain = normalize(match[2]);
-          if (breeder) breeders.add(breeder);
-          if (strain) strains.add(strain);
-        }
+        const parts = raw.split(/\s*–\s*/);
+        const breeder = normalize(parts[1] || '');
+        const strain = normalize(parts[2] || '');
+        if (breeder) breeders.add(breeder);
+        if (strain) strains.add(strain);
       });
 
       setSummary({
