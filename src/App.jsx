@@ -88,8 +88,9 @@ const App = () => {
 
       <div className="space-y-2">
         {filtered.map((entry, idx) => (
-          <div key={idx} className="border p-2 rounded shadow font-mono">
-            {entry.raw}
+          <div key={idx} className="border p-2 rounded shadow">
+            <div className="text-sm font-bold text-gray-800 mb-1">Case: {entry.case}</div>
+            <div className="font-mono">{entry.raw}</div>
           </div>
         ))}
       </div>
