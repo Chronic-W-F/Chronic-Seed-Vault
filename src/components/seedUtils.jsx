@@ -26,49 +26,35 @@ const docUrls = [
 ];
 
 export const fetchSeedData = async () => {
-  console.log(">>> fetchSeedData called");
   const allData = [];
 
   for (const { name, url } of docUrls) {
     try {
       const res = await fetch(url);
-      if (!res.ok) {
-        console.error(`[${name}] Failed to fetch. Status: ${res.status}`);
-        continue;
-      }
-
       const text = await res.text();
+
       const lines = text
         .split('\n')
         .map((line) => line.trim())
         .filter((line) => line && !line.toLowerCase().includes('slot'));
 
+      console.log(`[${name}] Parsed lines:`, lines.length);
+
       for (const line of lines) {
-        const parts = line.split(/\s*[–—-]\s*/);
-        if (parts.length < 3) {
-          console.warn(`[${name}] Skipped malformed line: ${line}`);
-          continue;
-        }
-
-        const [slot, breeder, strain, sex, type] = parts;
-
         allData.push({
-          slot: slot?.trim() || '',
-          breeder: breeder?.trim() || '',
-          strain: strain?.trim() || '',
-          sex: sex?.trim() || '',
-          type: type?.trim() || '',
+          slot: '',
+          breeder: '',
+          strain: '',
+          sex: '',
+          type: '',
           case: name,
-          raw: line.trim(),
+          raw: line,
         });
       }
-
-      console.log(`[${name}] Loaded entries: ${allData.length}`);
     } catch (err) {
-      console.error(`[${name}] Error loading:`, err);
+      console.error(`Failed to load ${name}:`, err);
     }
   }
 
-  console.log(`>>> Final seed total: ${allData.length}`);
   return allData;
 };
