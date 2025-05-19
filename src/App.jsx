@@ -59,12 +59,12 @@ const App = () => {
       const raw = normalize(entry.raw);
       const caseName = entry.case;
 
-      // ALIAS MATCH (exact override)
+      // If user typed an exact alias, only match that alias against breeder
       if (aliasTarget) {
-        return breeder.includes(normalize(aliasTarget));
+        return breeder.includes(aliasTarget);
       }
 
-      // FUZZY SEARCH
+      // If user typed anything else, fallback to fuzzy search
       if (rawQuery) {
         return (
           breeder.includes(rawQuery) ||
@@ -74,9 +74,10 @@ const App = () => {
         );
       }
 
-      // CASE FILTER ONLY
+      // If no search, apply case filter
       if (selectedCase) return caseName === selectedCase;
 
+      // Otherwise, don't show anything
       return false;
     });
 
