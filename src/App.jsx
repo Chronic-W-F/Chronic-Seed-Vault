@@ -16,12 +16,16 @@ const App = () => {
       const data = await fetchSeedData();
       setSeedData(data);
 
+      // Count unique breeders and strains based on raw line
       const breeders = new Set();
       const strains = new Set();
 
-      data.forEach(({ breeder, strain }) => {
-        if (breeder) breeders.add(normalize(breeder));
-        if (strain) strains.add(normalize(strain));
+      data.forEach(({ raw }) => {
+        const parts = raw.split(/\s*–\s*/);
+        const breeder = normalize(parts[1] || '');
+        const strain = normalize(parts[2] || '');
+        if (breeder) breeders.add(breeder);
+        if (strain) strains.add(strain);
       });
 
       setSummary({
