@@ -38,7 +38,7 @@ const App = () => {
       setFiltered([]); // start empty
     };
 
-    loadData();
+    loadData(console.log('Loaded seed lines:', data.length););
   }, []);
 
   useEffect(() => {
