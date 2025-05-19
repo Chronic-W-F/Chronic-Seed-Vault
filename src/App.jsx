@@ -2,19 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { fetchSeedData } from './components/seedUtils';
 import { VaultSummary } from './components/VaultSummary';
 
-const aliasMap = {
-  copy: 'copycat genetics',
-  copycat: 'copycat genetics',
-  'copy cat': 'copycat genetics',
-  thc: 'total health connections',
-  'total health': 'total health connections',
-  dwp: 'dadweedproject',
-  dadweed: 'dadweedproject',
-  'dadweed project': 'dadweedproject',
-  cwf: 'chronic worm farmer',
-  'chronic worm farmer': 'chronic worm farmer',
-};
-
 const normalize = (val) => val?.toLowerCase().trim() || '';
 
 const App = () => {
@@ -42,7 +29,7 @@ const App = () => {
         totalStrains: strains.size,
       });
 
-      setFiltered([]); // Start empty
+      setFiltered([]); // start empty
     };
 
     loadData();
@@ -50,34 +37,19 @@ const App = () => {
 
   useEffect(() => {
     const rawQuery = normalize(query);
-    const aliasTarget = aliasMap[rawQuery] || null;
 
     const newFiltered = seedData.filter((entry) => {
-      const breeder = normalize(entry.breeder);
-      const strain = normalize(entry.strain);
-      const slot = normalize(entry.slot);
-      const raw = normalize(entry.raw);
       const caseName = entry.case;
+      const raw = normalize(entry.raw);
 
-      // If user typed an exact alias, only match that alias against breeder
-      if (aliasTarget) {
-        return breeder.includes(aliasTarget);
-      }
-
-      // If user typed anything else, fallback to fuzzy search
       if (rawQuery) {
-        return (
-          breeder.includes(rawQuery) ||
-          strain.includes(rawQuery) ||
-          slot.includes(rawQuery) ||
-          raw.includes(rawQuery)
-        );
+        return raw.includes(rawQuery);
       }
 
-      // If no search, apply case filter
-      if (selectedCase) return caseName === selectedCase;
+      if (selectedCase) {
+        return caseName === selectedCase;
+      }
 
-      // Otherwise, don't show anything
       return false;
     });
 
@@ -94,7 +66,7 @@ const App = () => {
       <div className="mb-4 flex flex-col sm:flex-row gap-2">
         <input
           type="text"
-          placeholder="Search anything..."
+          placeholder="Search full line..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="border p-2 rounded w-full sm:w-1/2"
@@ -116,11 +88,8 @@ const App = () => {
 
       <div className="space-y-2">
         {filtered.map((entry, idx) => (
-          <div key={idx} className="border p-2 rounded shadow">
-            <div className="font-semibold">{entry.strain}</div>
-            <div className="text-sm text-gray-600">
-              Breeder: {entry.breeder} | Type: {entry.type} | Sex: {entry.sex} | Slot: {entry.slot} | Case: {entry.case}
-            </div>
+          <div key={idx} className="border p-2 rounded shadow font-mono">
+            {entry.raw}
           </div>
         ))}
       </div>
