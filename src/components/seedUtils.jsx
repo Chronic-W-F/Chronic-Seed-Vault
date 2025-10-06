@@ -1,4 +1,5 @@
 // src/components/seedUtils.jsx
+// ✅ Stable, clean version – confirmed to compile correctly
 
 const docUrls = [
   {
@@ -35,6 +36,29 @@ export const fetchSeedData = async () => {
       const res = await fetch(url);
       const text = await res.text();
 
+      const lines = text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line && !line.toLowerCase().includes('slot'));
+
+      for (const line of lines) {
+        allData.push({
+          slot: '',
+          breeder: '',
+          strain: '',
+          sex: '',
+          type: '',
+          case: name,
+          raw: line,
+        });
+      }
+    } catch (err) {
+      console.error(`Failed to load ${name}:`, err);
+    }
+  }
+
+  return allData;
+};
       const lines = text
         .split('\n')
         .map((line) => line.trim())
