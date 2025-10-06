@@ -1,3 +1,6 @@
+// src/components/seedUtils.js
+// Updated October 2025 – all current Google Doc IDs verified
+
 const docUrls = [
   {
     name: "Total Health Connections",
@@ -5,7 +8,7 @@ const docUrls = [
   },
   {
     name: "Autoflower Case",
-    url: "https://docs.google.com/document/d/1RKRh2B2GWkopW5eKG2SYkM3dF7kfXnO6jsdeyox13Cc/export?format=txt",
+    url: "https://docs.google.com/document/d/11Fi5ux2DBa7bP20V6U8ZqzZM_L-7O0S4SuWZCTXEOO0/export?format=txt",
   },
   {
     name: "Red/Black Case",
@@ -30,11 +33,33 @@ export const fetchSeedData = async () => {
 
   for (const { name, url } of docUrls) {
     try {
-      const res = await fetch(url);
+      // cache-buster so Google always serves fresh text
+      const res = await fetch(`${url}&_=${Date.now()}`, { cache: "no-store" });
       const text = await res.text();
 
       const lines = text
-        .split('\n')
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.toLowerCase().includes("slot"));
+
+      for (const line of lines) {
+        allData.push({
+          slot: "",
+          breeder: "",
+          strain: "",
+          sex: "",
+          type: "",
+          case: name,
+          raw: line,
+        });
+      }
+    } catch (err) {
+      console.error(`Failed to load ${name}:`, err);
+    }
+  }
+
+  return allData;
+};        .split('\n')
         .map((line) => line.trim())
         .filter((line) => line && !line.toLowerCase().includes('slot'));
 
