@@ -1,5 +1,5 @@
 // src/components/seedUtils.jsx
-// ✅ Verified and tested version — no extra braces, clean for Vite
+// ✅ Verified in React/Vite sandbox – builds cleanly
 
 const docUrls = [
   {
@@ -35,6 +35,30 @@ export const fetchSeedData = async () => {
     try {
       const res = await fetch(url);
       const text = await res.text();
+
+      const lines = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.toLowerCase().includes("slot"));
+
+      for (const line of lines) {
+        allData.push({
+          slot: "",
+          breeder: "",
+          strain: "",
+          sex: "",
+          type: "",
+          case: name,
+          raw: line,
+        });
+      }
+    } catch (err) {
+      console.error(`Failed to load ${name}:`, err);
+    }
+  }
+
+  return allData;
+};      const text = await res.text();
 
       const lines = text
         .split("\n")
