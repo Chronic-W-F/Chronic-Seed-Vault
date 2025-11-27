@@ -63,29 +63,4 @@ export const fetchSeedData = async () => {
   }
 
   return allData;
-};        .split("\n")
-        .map((line) => line.trim())
-        .filter(
-          (line) =>
-            line &&
-            !line.toLowerCase().includes("slot")
-        );
-
-      for (const line of lines) {
-        allData.push({
-          slot: "",
-          breeder: "",
-          strain: "",
-          sex: "",
-          type: "",
-          case: name,
-          raw: line,
-        });
-      }
-    } catch (err) {
-      console.error(`Failed to load ${name}:`, err);
-    }
-  }
-
-  return allData;
 };
