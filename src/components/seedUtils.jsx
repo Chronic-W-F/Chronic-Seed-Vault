@@ -23,6 +23,10 @@ const docUrls = [
     name: "Chronic Worm Farmer",
     url: "https://docs.google.com/document/d/1UWskJERde9hip9FgKonDmP21GOHIcDJZS217VWGIeCc/export?format=txt",
   },
+  {
+    name: "Purple/Black Case",
+    url: "https://docs.google.com/document/d/1OsmB_L8Ou-S7vlT4jFNb_s-_fGCuxPJfLDVp4cO2h5U/export?format=txt",
+  },
 ];
 
 export const fetchSeedData = async () => {
@@ -35,6 +39,31 @@ export const fetchSeedData = async () => {
 
       const lines = text
         .split("\n")
+        .map((line) => line.trim())
+        .filter(
+          (line) =>
+            line &&
+            !line.toLowerCase().includes("slot")
+        );
+
+      for (const line of lines) {
+        allData.push({
+          slot: "",
+          breeder: "",
+          strain: "",
+          sex: "",
+          type: "",
+          case: name,
+          raw: line,
+        });
+      }
+    } catch (err) {
+      console.error(`Failed to load ${name}:`, err);
+    }
+  }
+
+  return allData;
+};        .split("\n")
         .map((line) => line.trim())
         .filter(
           (line) =>
