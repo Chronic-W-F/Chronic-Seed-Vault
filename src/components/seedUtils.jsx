@@ -21,7 +21,7 @@ const docUrls = [
   },
   {
     name: "Chronic Worm Farmer",
-    url: "https://docs.google.com/document/d/1UWskJERde9hip9FgKonDmP21GOHIcDJZS217VWGIeCc/export?format=txt",
+    url: "https://docs.google.com/document/d/1yLJNxaBgv3lwrIWQJ_VHXyVbuCCmRa1YnCiLFVau1w4/export?format=txt,
   },
   {
     name: "Purple/Black Case",
