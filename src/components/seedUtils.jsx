@@ -22,9 +22,9 @@ export const docUrls = [
     url: "https://docs.google.com/document/d/1f2JwxGy_xlhVbYW11NCP06t6qXbai_lKHC_UCrWsNgM/export?format=txt",
   },
   {
-    name: "Chronic Worm Farmer",
-    url: "https://docs.google.com/document/d/1yLJNxaBgv3lwrIWQJ_VHXyVbuCCmRa1YnCiLFVau1w4/export?format=txt",
-  },
+  name: "Chronic Worm Farmer",
+  url: "https://docs.google.com/document/d/1UWskJERde9hip9FgKonDmP21GOHIcDJZS217VWGIeCc/export?format=txt",
+},
   {
     name: "Purple/Black Case",
     url: "https://docs.google.com/document/d/1OsmB_L8Ou-S7vlT4jFNb_s-_fGCuxPJfLDVp4cO2h5U/export?format=txt",
