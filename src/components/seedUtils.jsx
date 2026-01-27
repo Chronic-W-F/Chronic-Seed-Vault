@@ -1,4 +1,6 @@
-const docUrls = [
+// src/components/seedUtils.jsx
+
+export const docUrls = [
   {
     name: "Total Health Connections",
     url: "https://docs.google.com/document/d/1FSxo3B5Sw4oNX8eD6akMLmLQi_8gL7quxWvT4k8-dlk/export?format=txt",
@@ -34,17 +36,22 @@ export const fetchSeedData = async () => {
 
   for (const { name, url } of docUrls) {
     try {
-      const res = await fetch(url);
+      // IMPORTANT: fetch through API proxy to avoid Google Docs CORS issues
+      const res = await fetch(
+        `/api/seedlist?url=${encodeURIComponent(url)}`
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       const text = await res.text();
 
       const lines = text
         .split("\n")
         .map((line) => line.trim())
-        .filter(
-          (line) =>
-            line &&
-            !line.toLowerCase().includes("slot")
-        );
+        // Only remove header lines that START with "slot"
+        .filter((line) => line && !/^slot\b/i.test(line));
 
       for (const line of lines) {
         allData.push({
