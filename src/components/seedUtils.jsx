@@ -29,6 +29,12 @@ export const docUrls = [
     name: "Total Health Connections",
     url: "https://docs.google.com/document/d/1FSxo3B5Sw4oNX8eD6akMLmLQi_8gL7quxWvT4k8-dlk/export?format=txt",
   },
+
+  // 🔥 NEW — Breeding Projects Doc
+  {
+    name: "Breeding Projects",
+    url: "https://docs.google.com/document/d/1Hw-NzFpD4qJ2EjWtsI_S8yS4UWpQXvNin0u1_DRq8vA/export?format=txt",
+  },
 ];
 
 export const fetchSeedData = async () => {
