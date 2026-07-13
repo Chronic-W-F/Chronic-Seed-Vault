@@ -29,11 +29,13 @@ export const docUrls = [
     name: "Total Health Connections",
     url: "https://docs.google.com/document/d/1FSxo3B5Sw4oNX8eD6akMLmLQi_8gL7quxWvT4k8-dlk/export?format=txt",
   },
-
-  //  Breeding Projects Doc
   {
     name: "Breeding Projects",
     url: "https://docs.google.com/document/d/1Hw-NzFpD4qJ2EjWtsI_S8yS4UWpQXvNin0u1_DRq8vA/export?format=txt",
+  },
+  {
+    name: "Tri-Level Green/Black Case",
+    url: "https://docs.google.com/document/d/1Jjno3T79l8rp_6XGJLY0psSoNYSpkRsuACDuY8DUCd0/export?format=txt",
   },
 ];
 
@@ -42,8 +44,10 @@ export const fetchSeedData = async () => {
 
   for (const { name, url } of docUrls) {
     try {
-      // IMPORTANT: fetch through API proxy to avoid Google Docs CORS issues
-      const res = await fetch(`/api/seedlist?url=${encodeURIComponent(url)}`);
+      // Fetch through API proxy to avoid Google Docs CORS issues
+      const res = await fetch(
+        `/api/seedlist?url=${encodeURIComponent(url)}`
+      );
 
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}`);
@@ -54,7 +58,7 @@ export const fetchSeedData = async () => {
       const lines = text
         .split("\n")
         .map((line) => line.trim())
-        // Only remove header lines that START with "slot"
+        // Only remove header lines that start with "slot"
         .filter((line) => line && !/^slot\b/i.test(line));
 
       for (const line of lines) {
