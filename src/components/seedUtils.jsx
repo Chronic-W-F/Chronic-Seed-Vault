@@ -35,7 +35,7 @@ export const docUrls = [
   },
   {
     name: "Tri-Level Green/Black Case",
-    url: "https://docs.google.com/document/d/1Jjno3T79l8rp_6XGJLY0psSoNYSpkRsuACDuY8DUCd0/export?format=txt",
+    url: "https://docs.google.com/document/d/1Jjno3T79l8rp_6XGJLY0psSoNYSpkRsuACDuY8DUCd0/edit?usp=drivesdk",
   },
 ];
 
