@@ -14,6 +14,10 @@ export const docUrls = [
     url: "https://docs.google.com/document/d/1qoE2gM291GBNlX5pP9dtnNqqNF-aZzb4P-_w-DLUvZ8/export?format=txt",
   },
   {
+    name: "Double Level Blue Case",
+    url: "https://docs.google.com/document/d/16ZbAtkk5Z_SLkg6PJBztaMGaVh30Lqi7bzqs7zNp2Eo/export?format=txt",
+  },
+  {
     name: "Chronic Worm Farmer",
     url: "https://docs.google.com/document/d/1yLJNxaBgv3lwrIWQJ_VHXyVbuCCmRa1YnCiLFVau1w4/export?format=txt",
   },
