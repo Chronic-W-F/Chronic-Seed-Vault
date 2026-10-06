@@ -15,7 +15,7 @@ export const docUrls = [
   },
   {
     name: "Double Level Blue Case",
-    url: "https://docs.google.com/document/d/16ZbAtkk5Z_SLkg6PJBztaMGaVh30Lqi7bzqs7zNp2Eo/export?format=txt",
+    url: "https://docs.google.com/document/d/1vkJflysHBP3tb8CVdaOzgjHf86mWccVp5E83cBXmRrE/edit?usp=drivesdk",
   },
   {
     name: "Chronic Worm Farmer",
