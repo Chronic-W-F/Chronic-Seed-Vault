@@ -1,3 +1,4 @@
+
 // src/components/seedUtils.jsx
 
 export const docUrls = [
@@ -40,6 +41,11 @@ export const docUrls = [
   {
     name: "Tri-Level Green/Black Case",
     url: "https://docs.google.com/document/d/1kEQEfOPr6Y-NgvpeGEHyIIr--d5V-Y4RiHhe2MGBMPo/export?format=txt",
+  },
+  {
+    // NEW: Blue Breeding Case
+    name: "Blue Breeding Case w/Thoroughbred Genetics",
+    url: "https://docs.google.com/document/d/1WvFXMS19dC5lrjDJtopxCoYS224fBnxuSQEnVTTHAJI/export?format=txt",
   },
 ];
 
