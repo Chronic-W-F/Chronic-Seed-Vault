@@ -11,21 +11,28 @@ export const docUrls = [
     url: "https://docs.google.com/document/d/1f2JwxGy_xlhVbYW11NCP06t6qXbai_lKHC_UCrWsNgM/export?format=txt",
   },
   {
+    name: "Blue Breeding Case w/Thoroughbred Genetics",
+    url: "https://docs.google.com/document/d/1WvFXMS19dC5lrjDJtopxCoYS224fBnxuSQEnVTTHAJI/export?format=txt",
+  },
+  {
     name: "Blue Case Photos",
     url: "https://docs.google.com/document/d/1qoE2gM291GBNlX5pP9dtnNqqNF-aZzb4P-_w-DLUvZ8/export?format=txt",
+  },
+  {
+    name: "Breeding Projects",
+    url: "https://docs.google.com/document/d/1Hw-NzFpD4qJ2EjWtsI_S8yS4UWpQXvNin0u1_DRq8vA/export?format=txt",
+  },
+  {
+    name: "Chronic Worm Farmer",
+    url: "https://docs.google.com/document/d/1yLJNxaBgv3lwrIWQJ_VHXyVbuCCmRa1YnCiLFVau1w4/export?format=txt",
   },
   {
     name: "Double Level Blue Case",
     url: "https://docs.google.com/document/d/1vkJflysHBP3tb8CVdaOzgjHf86mWccVp5E83cBXmRrE/export?format=txt",
   },
   {
-    // NEW: Double Level Blue Case with handwritten labels
     name: "Double Level Blue Case - Handwritten #'s",
     url: "https://docs.google.com/document/d/11VlT8495HCRmu77syi570hI7zeHMLgxOXHwNeL56IY4/export?format=txt",
-  },
-  {
-    name: "Chronic Worm Farmer",
-    url: "https://docs.google.com/document/d/1yLJNxaBgv3lwrIWQJ_VHXyVbuCCmRa1YnCiLFVau1w4/export?format=txt",
   },
   {
     name: "Purple/Black Case",
@@ -40,16 +47,13 @@ export const docUrls = [
     url: "https://docs.google.com/document/d/1FSxo3B5Sw4oNX8eD6akMLmLQi_8gL7quxWvT4k8-dlk/export?format=txt",
   },
   {
-    name: "Breeding Projects",
-    url: "https://docs.google.com/document/d/1Hw-NzFpD4qJ2EjWtsI_S8yS4UWpQXvNin0u1_DRq8vA/export?format=txt",
-  },
-  {
     name: "Tri-Level Green/Black Case",
     url: "https://docs.google.com/document/d/1kEQEfOPr6Y-NgvpeGEHyIIr--d5V-Y4RiHhe2MGBMPo/export?format=txt",
   },
   {
-    name: "Blue Breeding Case w/Thoroughbred Genetics",
-    url: "https://docs.google.com/document/d/1WvFXMS19dC5lrjDJtopxCoYS224fBnxuSQEnVTTHAJI/export?format=txt",
+    // NEW: Weedasec Gear
+    name: "Weedasec Gear",
+    url: "https://docs.google.com/document/d/1kW4-dnKhDhO-pkKfE93SLdgMzGWCh-w4xPIsM1IbXyM/export?format=txt",
   },
 ];
 
