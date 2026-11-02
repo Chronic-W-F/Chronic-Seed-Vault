@@ -19,6 +19,11 @@ export const docUrls = [
     url: "https://docs.google.com/document/d/1vkJflysHBP3tb8CVdaOzgjHf86mWccVp5E83cBXmRrE/export?format=txt",
   },
   {
+    // NEW: Double Level Blue Case with handwritten labels
+    name: "Double Level Blue Case - Handwritten #'s",
+    url: "https://docs.google.com/document/d/11VlT8495HCRmu77syi570hI7zeHMLgxOXHwNeL56IY4/export?format=txt",
+  },
+  {
     name: "Chronic Worm Farmer",
     url: "https://docs.google.com/document/d/1yLJNxaBgv3lwrIWQJ_VHXyVbuCCmRa1YnCiLFVau1w4/export?format=txt",
   },
@@ -43,7 +48,6 @@ export const docUrls = [
     url: "https://docs.google.com/document/d/1kEQEfOPr6Y-NgvpeGEHyIIr--d5V-Y4RiHhe2MGBMPo/export?format=txt",
   },
   {
-    // NEW: Blue Breeding Case
     name: "Blue Breeding Case w/Thoroughbred Genetics",
     url: "https://docs.google.com/document/d/1WvFXMS19dC5lrjDJtopxCoYS224fBnxuSQEnVTTHAJI/export?format=txt",
   },
